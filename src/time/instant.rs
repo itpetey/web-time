@@ -123,6 +123,12 @@ impl Instant {
 	}
 }
 
+impl From<Duration> for Instant {
+	fn from(duration: Duration) -> Self {
+		Self(duration)
+	}
+}
+
 impl Add<Duration> for Instant {
 	type Output = Self;
 
