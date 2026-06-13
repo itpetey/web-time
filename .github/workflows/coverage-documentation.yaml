@@ -63,7 +63,8 @@ jobs:
           rustup default nightly
       - name: Set `build-std` components
         if: matrix.mt.build-std == true && matrix.features.no_std == false
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std,profiler_builtins" >> $GITHUB_ENV
+        run:
+          echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std,profiler_builtins" >> $GITHUB_ENV
       - name: Set `build-std` `no_std` components
         if: matrix.mt.build-std == true && matrix.features.no_std == true
         run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc,profiler_builtins" >> $GITHUB_ENV
