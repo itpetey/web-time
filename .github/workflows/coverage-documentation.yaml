@@ -2,7 +2,7 @@ name: Coverage & Documentation
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "modernise"]
   pull_request:
   workflow_dispatch:
 
@@ -55,7 +55,7 @@ jobs:
       - name: Install Clang v19
         run: |
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo add-apt-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-19 main"  
+          sudo add-apt-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-19 main"
           sudo apt-get install clang-19
       - name: Install Rust nightly
         run: |
