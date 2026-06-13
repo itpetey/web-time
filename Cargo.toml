@@ -17,6 +17,7 @@ rustdoc-args = ["--cfg=docsrs"]
 targets = ["wasm32-unknown-unknown", "wasm32v1-none"]
 
 [workspace]
+exclude = ["tests-crates/minimal-versions", "tests-crates/resolver"]
 members = ["tests-native", "tests-web"]
 resolver = "3"
 
