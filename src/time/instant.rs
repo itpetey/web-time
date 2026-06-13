@@ -333,9 +333,9 @@ mod test {
 
 	use core::time::Duration;
 
-	use rand::distributions::Uniform;
-	use rand::rngs::{OsRng, StdRng};
-	use rand::{Rng, SeedableRng};
+	use rand::distr::Uniform;
+	use rand::rngs::{StdRng, SysRng};
+	use rand::{RngExt, SeedableRng};
 	use wasm_bindgen_test::wasm_bindgen_test;
 
 	/// Range to maximum accurately representable integer.
@@ -445,12 +445,10 @@ mod test {
 			clippy::cast_precision_loss,
 			reason = "no conversion available"
 		)]
-		let mut random = StdRng::from_rng(OsRng)
+		let mut rng = SysRng::default();
+		let mut random = StdRng::try_from_rng(&mut rng)
 			.unwrap()
-			.sample_iter(Uniform::new_inclusive(
-				0.,
-				(MAXIMUM_ACCURATE_F64 / 1000) as f64,
-			));
+			.sample_iter(Uniform::new_inclusive(0., (MAXIMUM_ACCURATE_F64 / 1000) as f64).unwrap());
 
 		for _ in 0..10_000_000 {
 			let time_stamp = random.next().unwrap();

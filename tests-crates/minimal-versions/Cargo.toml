@@ -1,17 +1,14 @@
-[workspace]
-
 [package]
-edition = "2021"
 name = "minimal-versions"
-publish = false
-rust-version = "1.60"
 version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+web-time = { path = "../..", default-features = false }
 
 [features]
 default = ["web-time/default"]
 msrv = ["web-time/msrv"]
 serde = ["web-time/serde"]
 std = ["web-time/std"]
-
-[dependencies]
-web-time = { path = "../..", default-features = false }

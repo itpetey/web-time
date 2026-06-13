@@ -28,7 +28,7 @@ jobs:
           - { target: wasm32-unknown-unknown, description: Web }
           - { target: wasm32v1-none, description: Wasm v1 }
         rust:
-          - { version: "1.60", description: MSRV, atomics: false }
+          - { version: "1.85", description: MSRV, atomics: false }
           - { version: stable, atomics: false }
           - { version: nightly, atomics: false }
           - {
@@ -66,7 +66,7 @@ jobs:
           - target: { target: wasm32-unknown-unknown, description: Web }
             rust: { version: nightly, atomics: false }
           - target: { target: wasm32v1-none, description: Wasm v1 }
-            rust: { version: "1.60" }
+            rust: { version: "1.85" }
           - target: { target: wasm32v1-none, description: Wasm v1 }
             rust: { version: stable }
           - target: { target: wasm32v1-none, description: Wasm v1 }
@@ -86,7 +86,7 @@ jobs:
         if: matrix.rust.build-std == true && matrix.features.no_std == true
         run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc" >> $GITHUB_ENV
       - name: Fix MSRV dependencies
-        if: matrix.rust.version == '1.60'
+        if: matrix.rust.version == '1.85'
         run: |
           cargo update -p bumpalo --precise 3.14.0
           cargo update -p serde --precise 1.0.210
@@ -118,7 +118,7 @@ jobs:
           - { target: wasm32-unknown-unknown, description: Web }
           - { target: wasm32v1-none, description: Wasm v1 }
         rust:
-          - { version: "1.60", description: MSRV }
+          - { version: "1.85", description: MSRV }
           - { version: stable }
           - { version: nightly }
         features:
@@ -147,7 +147,7 @@ jobs:
           - target: { target: wasm32-unknown-unknown, description: Web }
             rust: { version: nightly }
           - target: { target: wasm32v1-none, description: Wasm v1 }
-            rust: { version: "1.60" }
+            rust: { version: "1.85" }
           - target: { target: wasm32v1-none, description: Wasm v1 }
             rust: { version: stable }
           - target: { target: wasm32v1-none, description: Wasm v1 }
@@ -189,7 +189,7 @@ jobs:
           - { target: wasm32-unknown-unknown, description: Web }
           - { target: wasm32v1-none, description: Wasm v1 }
         rust:
-          - { version: "1.60", description: MSRV }
+          - { version: "1.85", description: MSRV }
           - { version: stable }
           - { version: nightly }
         features:
@@ -218,7 +218,7 @@ jobs:
           - target: { target: wasm32-unknown-unknown, description: Web }
             rust: { version: nightly }
           - target: { target: wasm32v1-none, description: Wasm v1 }
-            rust: { version: "1.60" }
+            rust: { version: "1.85" }
           - target: { target: wasm32v1-none, description: Wasm v1 }
             rust: { version: stable }
           - target: { target: wasm32v1-none, description: Wasm v1 }
@@ -232,7 +232,7 @@ jobs:
           rustup toolchain install ${{ matrix.rust.version }} --profile minimal --target ${{ matrix.target.target }}
           rustup default ${{ matrix.rust.version }}
       - name: Fix MSRV dependencies
-        if: matrix.rust.version == '1.60'
+        if: matrix.rust.version == '1.85'
         run: |
           cargo update -p bumpalo --precise 3.14.0
           cargo update -p serde --precise 1.0.210
@@ -254,7 +254,7 @@ jobs:
           - { target: wasm32-unknown-unknown, description: Web }
           - { target: wasm32v1-none, description: Wasm v1 }
         rust:
-          - { version: "1.60", description: MSRV }
+          - { version: "1.85", description: MSRV }
           - { version: stable }
           - { version: nightly }
         # We don't check `serde` because it fails on the dependency itself already.
@@ -267,7 +267,7 @@ jobs:
           - target: { target: wasm32-unknown-unknown, description: Web }
             rust: { version: nightly }
           - target: { target: wasm32v1-none, description: Wasm v1 }
-            rust: { version: "1.60" }
+            rust: { version: "1.85" }
           - target: { target: wasm32v1-none, description: Wasm v1 }
             rust: { version: stable }
           - target: { target: wasm32v1-none, description: Wasm v1 }
@@ -281,7 +281,7 @@ jobs:
           rustup toolchain install ${{ matrix.rust.version }} --profile minimal --target ${{ matrix.target.target }}
           rustup default ${{ matrix.rust.version }}
       - name: Fix MSRV dependencies
-        if: matrix.rust.version == '1.60'
+        if: matrix.rust.version == '1.85'
         run: |
           cargo update -p bumpalo --precise 3.14.0
           cargo update -p serde --precise 1.0.210

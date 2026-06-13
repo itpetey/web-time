@@ -1,67 +1,8 @@
 [package]
-edition = "2021"
 name = "tests-web"
-publish = false
 version = "0.0.0"
-
-[features]
-default = ["std"]
-run = []
-serde = ["serde_test", "serde_json", "serde-json-core"]
-std = [
-	"wasm-bindgen/std",
-	"js-sys/std",
-	"web-sys/std",
-	"wasm-bindgen-futures/std",
-	"wasm-bindgen-test/std",
-	"serde_test?/std",
-	"serde_json?/std",
-	"serde-json-core?/std",
-	"getrandom/std",
-	"rand/std",
-	"futures-util/std",
-	"futures-channel/std",
-	"web-thread",
-	"web-time/std",
-]
-
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-dlmalloc = "0.2"
-getrandom = { version = "0.2", features = ["js"] }
-js-sys = { version = "0.3", default-features = false }
-libm = "0.2"
-rand = { version = "0.8", default-features = false, features = ["getrandom", "std_rng"] }
-serde-json-core = { version = "0.6", optional = true, default-features = false }
-serde_json = { version = "1", optional = true, default-features = false, features = ["alloc"] }
-serde_test = { version = "1", optional = true, default-features = false }
-static_assertions = "1"
-wasm-bindgen = { version = "0.2", default-features = false }
-wasm-bindgen-futures = { version = "0.4", default-features = false }
-wasm-bindgen-test = { version = "0.3", default-features = false, features = [
-	"msrv",
-	"unstable-test-coverage",
-] }
-web-sys = { version = "0.3", default-features = false, features = [
-	"CssStyleDeclaration",
-	"Document",
-	"Element",
-	"HtmlTableElement",
-	"HtmlTableRowElement",
-	"Performance",
-	"Window",
-] }
-web-time = { path = "../", default-features = false }
-
-[target.'cfg(all(target_arch = "wasm32", target_feature = "atomics"))'.dependencies]
-futures-channel = { version = "0.3", default-features = false, features = ["alloc"] }
-futures-util = { version = "0.3", default-features = false }
-web-sys = { version = "0.3", default-features = false, features = [
-	"console",
-	"OfflineAudioContext",
-] }
-web-thread = { git = "https://github.com/daxpedda/wasm-worker", rev = "ce376d95dbdd9e7b59ac7de9c6f14090076f7865", optional = true, features = [
-	"audio-worklet",
-] }
+edition = "2024"
+publish = false
 
 [lib]
 bench = false
@@ -79,12 +20,12 @@ test = false
 [[test]]
 name = "atomic_failure"
 path = "../tests/atomic_failure.rs"
-required-features = ["std", "run"]
+required-features = ["run", "std"]
 
 [[test]]
 name = "atomic_success"
 path = "../tests/atomic_success.rs"
-required-features = ["std", "run"]
+required-features = ["run", "std"]
 
 [[test]]
 harness = false
@@ -108,7 +49,7 @@ required-features = ["run"]
 harness = false
 name = "web_serde"
 path = "../tests/serde.rs"
-required-features = ["serde", "run"]
+required-features = ["run", "serde"]
 
 [[test]]
 harness = false
@@ -137,7 +78,58 @@ required-features = ["run"]
 [[test]]
 name = "web"
 path = "../tests/web.rs"
-required-features = ["std", "run"]
+required-features = ["run", "std"]
+
+[target.'cfg(all(target_arch = "wasm32", target_feature = "atomics"))'.dev-dependencies]
+futures-channel = { workspace = true, features = ["alloc"] }
+futures-util.workspace = true
+web-sys = { workspace = true, features = ["OfflineAudioContext", "console"] }
+web-thread.workspace = true
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+dlmalloc.workspace = true
+wasm-bindgen-test.workspace = true
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+getrandom = { workspace = true, features = ["wasm_js"] }
+js-sys.workspace = true
+libm.workspace = true
+rand = { workspace = true, features = ["std_rng", "sys_rng"] }
+serde_json = { workspace = true, features = ["alloc"] }
+serde-json-core.workspace = true
+serde_test.workspace = true
+static_assertions.workspace = true
+wasm-bindgen.workspace = true
+wasm-bindgen-futures.workspace = true
+web-sys = {
+  workspace = true,
+  features = [
+    "CssStyleDeclaration",
+    "Document",
+    "Element",
+    "HtmlTableElement",
+    "HtmlTableRowElement",
+    "Performance",
+    "Window",
+  ]
+}
+web-time = { path = "../", default-features = false }
+
+[features]
+default = ["std"]
+run = []
+serde = ["web-time/serde"]
+std = [
+  "futures-channel/std",
+  "futures-util/std",
+  "js-sys/std",
+  "rand/std",
+  "wasm-bindgen-futures/std",
+  "wasm-bindgen-test/std",
+  "wasm-bindgen/std",
+  "web-sys/std",
+  "web-time/std",
+]
 
 [lints]
 workspace = true

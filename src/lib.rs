@@ -168,6 +168,7 @@
 #![cfg_attr(all(test, target_arch = "wasm32"), no_main)]
 #![cfg_attr(all(doc, docsrs), feature(doc_cfg))]
 #![cfg_attr(all(not(feature = "std"), nightly), feature(asm_experimental_arch))]
+#![cfg_attr(nightly, feature(coverage_attribute))]
 
 #[cfg(all(target_arch = "wasm32", any(target_os = "unknown", target_os = "none")))]
 mod time;
