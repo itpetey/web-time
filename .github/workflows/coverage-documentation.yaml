@@ -67,6 +67,12 @@ jobs:
       - name: Set `build-std` `no_std` components
         if: matrix.mt.build-std == true && matrix.features.no_std == true
         run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc" >> $GITHUB_ENV
+      - name: Set serde features
+        if: matrix.features.no_std == false
+        run: echo "SERDE_FEATURES=--features serde" >> $GITHUB_ENV
+      - name: Unset serde features
+        if: matrix.features.no_std == true
+        run: echo "SERDE_FEATURES=" >> $GITHUB_ENV
       - name: Test
         env:
           WASM_BINDGEN_USE_BROWSER: 1
@@ -74,14 +80,14 @@ jobs:
         run: |
           chromedriver --port=9000 &
           mkdir coverage-output
-          LLVM_PROFILE_FILE=$(realpath coverage-output)/%m_%p.profraw cargo test --workspace --features serde --target wasm32-unknown-unknown $BUILD_STD_COMPONENTS ${{ matrix.features.features }} --tests
+          LLVM_PROFILE_FILE=$(realpath coverage-output)/%m_%p.profraw cargo test --workspace $SERDE_FEATURES --target wasm32-unknown-unknown $BUILD_STD_COMPONENTS ${{ matrix.features.features }} --tests
       - name: Prepare Object Files
         run: |
           mkdir coverage-input
           crate_name=web_time
           IFS=$'\n'
           for file in $(
-            cargo test --workspace --features serde --target wasm32-unknown-unknown $BUILD_STD_COMPONENTS ${{ matrix.features.features }} --tests --no-run --message-format=json | \
+            cargo test --workspace $SERDE_FEATURES --target wasm32-unknown-unknown $BUILD_STD_COMPONENTS ${{ matrix.features.features }} --tests --no-run --message-format=json | \
             jq -r "select(.reason == \"compiler-artifact\") | (select(.target.kind == [\"test\"]) // select(.target.name == \"$crate_name\")) | .filenames[0]"
           )
           do
