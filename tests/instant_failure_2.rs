@@ -10,7 +10,7 @@ mod util;
 use wasm_bindgen_test::wasm_bindgen_test;
 use web_time::{Duration, Instant};
 
-use self::util::{sleep, WAIT};
+use self::util::{WAIT, sleep};
 
 /// [`Instant::add_assign()`] failure.
 #[wasm_bindgen_test(unsupported = pollster::test)]

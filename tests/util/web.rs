@@ -9,7 +9,7 @@ use core::future::Future;
 use core::pin::Pin;
 #[cfg(all(target_feature = "atomics", feature = "std"))]
 use core::sync::atomic::{AtomicBool, Ordering};
-use core::task::{ready, Context, Poll};
+use core::task::{Context, Poll, ready};
 use core::time::Duration;
 
 #[cfg(all(target_feature = "atomics", feature = "std"))]

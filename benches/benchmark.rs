@@ -42,46 +42,44 @@ pub fn main() {
 	table.set_id("benchmark");
 	body.append_child(&table).unwrap();
 
-	let benchmark =
-		|name: &str, run: fn(f64) -> Duration| {
-			let performance = performance.clone();
-			let table = table.clone();
-			let name = name.to_owned();
+	let benchmark = |name: &str, run: fn(f64) -> Duration| {
+		let performance = performance.clone();
+		let table = table.clone();
+		let name = name.to_owned();
 
-			let closure =
-				Closure::once_into_js(move || {
-					// Range to maximum accurately representable integer.
-					let mut rng = SysRng::default();
-					let mut random = StdRng::try_from_rng(&mut rng).unwrap().sample_iter(
-						Uniform::new_inclusive(0., u64::pow(2, f64::MANTISSA_DIGITS) as f64).unwrap(),
-					);
+		let closure = Closure::once_into_js(move || {
+			// Range to maximum accurately representable integer.
+			let mut rng = SysRng::default();
+			let mut random = StdRng::try_from_rng(&mut rng).unwrap().sample_iter(
+				Uniform::new_inclusive(0., u64::pow(2, f64::MANTISSA_DIGITS) as f64).unwrap(),
+			);
 
-					let time_stamps: Vec<_> = iter::repeat_with(|| random.next().unwrap())
-						.take(RUNS)
-						.collect();
+			let time_stamps: Vec<_> = iter::repeat_with(|| random.next().unwrap())
+				.take(RUNS)
+				.collect();
 
-					let start = performance.now();
+			let start = performance.now();
 
-					for time_stamp in time_stamps {
-						hint::black_box(run(time_stamp));
-					}
+			for time_stamp in time_stamps {
+				hint::black_box(run(time_stamp));
+			}
 
-					let time = performance.now() - start;
-					let time = time / const { (RUNS / 1_000_000) as f64 };
+			let time = performance.now() - start;
+			let time = time / const { (RUNS / 1_000_000) as f64 };
 
-					let row: HtmlTableRowElement = table.insert_row().unwrap().unchecked_into();
-					let cell = row.insert_cell().unwrap();
-					cell.set_text_content(Some(&name));
-					cell.style().set_property("padding-right", "2em").unwrap();
-					row.insert_cell()
-						.unwrap()
-						.set_text_content(Some(&format!("{time:.2}ns")));
-				});
+			let row: HtmlTableRowElement = table.insert_row().unwrap().unchecked_into();
+			let cell = row.insert_cell().unwrap();
+			cell.set_text_content(Some(&name));
+			cell.style().set_property("padding-right", "2em").unwrap();
+			row.insert_cell()
+				.unwrap()
+				.set_text_content(Some(&format!("{time:.2}ns")));
+		});
 
-			window
-				.set_timeout_with_callback(closure.unchecked_ref())
-				.unwrap();
-		};
+		window
+			.set_timeout_with_callback(closure.unchecked_ref())
+			.unwrap();
+	};
 
 	benchmark("custom `f64` conversion", adjusted_std);
 	benchmark("`Duration::from_millis()`", |time_stamp| {

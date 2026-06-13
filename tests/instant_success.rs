@@ -9,7 +9,7 @@ mod util;
 use wasm_bindgen_test::wasm_bindgen_test;
 use web_time::{Duration, Instant};
 
-use self::util::{sleep, DIFF, MAX_DIFF, WAIT};
+use self::util::{DIFF, MAX_DIFF, WAIT, sleep};
 
 /// [`Instant::duration_since()`] success.
 #[wasm_bindgen_test(unsupported = pollster::test)]

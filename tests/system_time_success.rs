@@ -13,7 +13,7 @@ use alloc::string::ToString;
 use wasm_bindgen_test::wasm_bindgen_test;
 use web_time::{Duration, SystemTime};
 
-use self::util::{sleep, DIFF, MAX_DIFF, WAIT};
+use self::util::{DIFF, MAX_DIFF, WAIT, sleep};
 
 /// [`SystemTime::UNIX_EPOCH`].
 #[allow(

@@ -11,7 +11,7 @@ use web_sys::console;
 use web_thread::web::{self, has_spawn_support};
 use web_time::{Duration, Instant};
 
-use self::util::{sleep, Flag, DIFF, WAIT};
+use self::util::{DIFF, Flag, WAIT, sleep};
 
 #[wasm_bindgen_test]
 async fn basic() {
