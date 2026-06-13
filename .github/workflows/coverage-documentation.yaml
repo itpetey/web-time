@@ -40,7 +40,7 @@ jobs:
     env:
       CFLAGS_wasm32_unknown_unknown: ${{ matrix.mt.cflags }}
       CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS:
-        -Cinstrument-coverage -Zcoverage-options=condition -Zno-profiler-runtime --emit=llvm-ir
+        -Cinstrument-coverage -Zcoverage-options=condition --emit=llvm-ir
         --cfg=web_time_test_coverage ${{ matrix.mt.flags }}
 
     steps:
@@ -63,10 +63,13 @@ jobs:
           rustup default nightly
       - name: Set `build-std` components
         if: matrix.mt.build-std == true && matrix.features.no_std == false
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std" >> $GITHUB_ENV
+        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std,profiler_builtins" >> $GITHUB_ENV
       - name: Set `build-std` `no_std` components
         if: matrix.mt.build-std == true && matrix.features.no_std == true
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc" >> $GITHUB_ENV
+        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc,profiler_builtins" >> $GITHUB_ENV
+      - name: Set `build-std` profiler runtime
+        if: matrix.mt.build-std != true
+        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=profiler_builtins" >> $GITHUB_ENV
       - name: Set serde features
         if: matrix.features.no_std == false
         run: echo "SERDE_FEATURES=--features serde" >> $GITHUB_ENV

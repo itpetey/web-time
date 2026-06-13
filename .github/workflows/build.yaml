@@ -158,10 +158,6 @@ jobs:
         run: |
           rustup toolchain install nightly --profile minimal
           cargo +nightly update -Z minimal-versions
-      - name: Fix Rust nightly incompatible dependencies
-        if: matrix.rust.version == 'nightly'
-        run: |
-          cargo update -p proc-macro2 --precise 1.0.60
       - name: Build
         run: cargo build ${{ matrix.features.features }} --target ${{ matrix.target.target }}
 
@@ -225,12 +221,6 @@ jobs:
         run: |
           rustup toolchain install ${{ matrix.rust.version }} --profile minimal --target ${{ matrix.target.target }}
           rustup default ${{ matrix.rust.version }}
-      - name: Fix MSRV dependencies
-        if: matrix.rust.version == '1.85'
-        run: |
-          cargo update -p bumpalo --precise 3.14.0
-          cargo update -p serde --precise 1.0.210
-          cargo update -p syn --precise 2.0.67
       - name: Build
         run: cargo build ${{ matrix.features.features }} --target ${{ matrix.target.target }}
 
@@ -274,12 +264,6 @@ jobs:
         run: |
           rustup toolchain install ${{ matrix.rust.version }} --profile minimal --target ${{ matrix.target.target }}
           rustup default ${{ matrix.rust.version }}
-      - name: Fix MSRV dependencies
-        if: matrix.rust.version == '1.85'
-        run: |
-          cargo update -p bumpalo --precise 3.14.0
-          cargo update -p serde --precise 1.0.210
-          cargo update -p syn --precise 2.0.67
       - name: Build
         env:
           RUSTFLAGS: --cfg docsrs
