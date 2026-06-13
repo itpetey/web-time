@@ -144,10 +144,7 @@ rust_2021_compatibility = { level = "warn", priority = -1 }
 single_use_lifetimes = "warn"
 trivial_casts = "warn"
 trivial_numeric_casts = "warn"
-unexpected_cfgs = { 
-level = "warn"
-, check-cfg = ["cfg(v1_77)", "cfg(nightly)", "cfg(web_time_test_coverage)"]
- }
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(v1_77)", "cfg(nightly)", "cfg(web_time_test_coverage)"] }
 unnameable_types = "warn"
 unreachable_pub = "warn"
 unsafe_code = "deny"

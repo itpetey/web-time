@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - { target: wasm32-unknown-unknown, docargs: -Zdoctest-xcompile }
+          - { target: wasm32-unknown-unknown }
         rust:
           - { version: nightly }
           - {
@@ -117,11 +117,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install `wasm-bindgen-cli`
-        uses: taiki-e/cache-cargo-install-action@v2
+        uses: taiki-e/install-action@v2
         with:
           tool: wasm-bindgen-cli
-          git: https://github.com/daxpedda/wasm-bindgen
-          rev: d4cb4a5d94090c18b469796250744612fd347dbd
       - name: Install Rust
         run: |
           rustup toolchain install ${{ matrix.rust.version }} --profile minimal ${{ matrix.rust.component }} --target ${{ matrix.target.target }}
@@ -178,6 +176,9 @@ jobs:
           CFLAGS_wasm32_unknown_unknown: ${{ matrix.rust.cflags }}
           CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS: ${{ matrix.rust.flags }}
           RUSTDOCFLAGS: ${{ matrix.rust.flags }}
-        run:
-          cargo test --features serde ${{ matrix.features.features }} --target ${{
-          matrix.target.target }} $BUILD_STD_COMPONENTS --workspace ${{ matrix.target.docargs }}
+        run: |
+          SERDE_FEATURES="--features serde"
+          if [ "${{ matrix.features.no_std }}" = "true" ]; then
+            SERDE_FEATURES=""
+          fi
+          cargo test $SERDE_FEATURES ${{ matrix.features.features }} --target ${{ matrix.target.target }} $BUILD_STD_COMPONENTS --workspace ${{ matrix.target.docargs }}

@@ -3,7 +3,11 @@
 //!
 //! See <https://github.com/rust-lang/rust/issues/54726>.
 
-#![allow(clippy::missing_const_for_fn)]
+#![allow(
+	clippy::missing_const_for_fn,
+	clippy::missing_docs_in_private_items,
+	reason = "lints inaccurate due to conditional compilation"
+)]
 
 #[cfg(feature = "msrv")]
 fn main() {
