@@ -1,8 +1,8 @@
 [package]
-name = "tests-web"
-version = "0.0.0"
 edition = "2024"
+name = "tests-web"
 publish = false
+version = "0.0.0"
 
 [lib]
 bench = false
@@ -95,24 +95,24 @@ getrandom = { workspace = true, features = ["wasm_js"] }
 js-sys.workspace = true
 libm.workspace = true
 rand = { workspace = true, features = ["std_rng", "sys_rng"] }
-serde_json = { workspace = true, features = ["alloc"] }
 serde-json-core.workspace = true
+serde_json = { workspace = true, features = ["alloc"] }
 serde_test.workspace = true
 static_assertions.workspace = true
 wasm-bindgen.workspace = true
 wasm-bindgen-futures.workspace = true
-web-sys = {
-  workspace = true,
-  features = [
-    "CssStyleDeclaration",
-    "Document",
-    "Element",
-    "HtmlTableElement",
-    "HtmlTableRowElement",
-    "Performance",
-    "Window",
-  ]
-}
+web-sys = { 
+workspace = true
+, features = [
+	"CssStyleDeclaration",
+	"Document",
+	"Element",
+	"HtmlTableElement",
+	"HtmlTableRowElement",
+	"Performance",
+	"Window",
+]
+ }
 web-time = { path = "../", default-features = false }
 
 [features]
@@ -120,15 +120,15 @@ default = ["std"]
 run = []
 serde = ["web-time/serde"]
 std = [
-  "futures-channel/std",
-  "futures-util/std",
-  "js-sys/std",
-  "rand/std",
-  "wasm-bindgen-futures/std",
-  "wasm-bindgen-test/std",
-  "wasm-bindgen/std",
-  "web-sys/std",
-  "web-time/std",
+	"futures-channel/std",
+	"futures-util/std",
+	"js-sys/std",
+	"rand/std",
+	"wasm-bindgen-futures/std",
+	"wasm-bindgen-test/std",
+	"wasm-bindgen/std",
+	"web-sys/std",
+	"web-time/std",
 ]
 
 [lints]

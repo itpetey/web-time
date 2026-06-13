@@ -1,8 +1,8 @@
 [package]
-name = "tests-native"
-version = "0.0.0"
 edition = "2024"
+name = "tests-native"
 publish = false
+version = "0.0.0"
 
 [lib]
 bench = false
@@ -52,12 +52,12 @@ required-features = ["run"]
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 pollster = { version = "0.4", features = ["macro"] }
+serde-json-core = { 
+version = "0.6"
+, default-features = false
+, features = ["std"]
+ }
 serde_json = "1"
-serde-json-core = {
-  version = "0.6",
-  default-features = false,
-  features = ["std"]
-}
 serde_test = "1"
 static_assertions = "1"
 wasm-bindgen-test = { workspace = true }

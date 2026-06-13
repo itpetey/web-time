@@ -1,15 +1,15 @@
 [package]
-name = "web-time"
-version = "1.1.0"
-edition = "2024"
-description = "Drop-in replacement for std::time for Wasm in browsers"
-repository = "https://github.com/daxpedda/web-time"
-license = "MIT OR Apache-2.0"
-keywords = ["instant", "systemtime", "time", "wasm", "web"]
-categories = ["api-bindings", "date-and-time", "wasm"]
-include = ["CHANGELOG.md", "LICENSE-*", "src/**/*"]
-autotests = false
 autobenches = false
+autotests = false
+categories = ["api-bindings", "date-and-time", "wasm"]
+description = "Drop-in replacement for std::time for Wasm in browsers"
+edition = "2024"
+include = ["CHANGELOG.md", "LICENSE-*", "src/**/*"]
+keywords = ["instant", "systemtime", "time", "wasm", "web"]
+license = "MIT OR Apache-2.0"
+name = "web-time"
+repository = "https://github.com/daxpedda/web-time"
+version = "1.1.0"
 
 [package.metadata.docs.rs]
 all-features = true
@@ -17,8 +17,8 @@ rustdoc-args = ["--cfg=docsrs"]
 targets = ["wasm32-unknown-unknown", "wasm32v1-none"]
 
 [workspace]
-resolver = "3"
 members = ["tests-native", "tests-web"]
+resolver = "3"
 
 [workspace.dependencies]
 dlmalloc = { version = "0.2", default-features = false }
@@ -31,8 +31,8 @@ pollster = { version = "0.4", default-features = false }
 rand = { version = "0.10", default-features = false }
 rustversion = { version = "1.0", default-features = false }
 serde = { version = "1.0", default-features = false }
-serde_json = { version = "1.0", default-features = false }
 serde-json-core = { version = "0.6", default-features = false }
+serde_json = { version = "1.0", default-features = false }
 serde_test = { version = "1.0", default-features = false }
 static_assertions = { version = "1.1", default-features = false }
 tests-web = { path = "tests-web", default-features = false }
@@ -143,14 +143,10 @@ rust_2021_compatibility = { level = "warn", priority = -1 }
 single_use_lifetimes = "warn"
 trivial_casts = "warn"
 trivial_numeric_casts = "warn"
-unexpected_cfgs = {
-  level = "warn",
-  check-cfg = [
-    "cfg(v1_77)",
-    "cfg(nightly)",
-    "cfg(web_time_test_coverage)",
-  ]
-}
+unexpected_cfgs = { 
+level = "warn"
+, check-cfg = ["cfg(v1_77)", "cfg(nightly)", "cfg(web_time_test_coverage)"]
+ }
 unnameable_types = "warn"
 unreachable_pub = "warn"
 unsafe_code = "deny"
@@ -189,8 +185,8 @@ std = ["rand/std", "tests-web/std", "wasm-bindgen-test/std"]
 workspace = true
 
 [profile.bench]
-lto = true
 codegen-units = 1
+lto = true
 
 [profile.test]
 opt-level = 1
