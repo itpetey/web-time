@@ -28,7 +28,7 @@ jobs:
           - { target: wasm32-unknown-unknown, description: Web }
           - { target: wasm32v1-none, description: Wasm v1 }
         rust:
-          - { version: "1.85", description: MSRV, atomics: false }
+          - { version: "1.87", description: MSRV, atomics: false }
           - { version: stable, atomics: false }
           - { version: nightly, atomics: false }
           - {
@@ -66,7 +66,7 @@ jobs:
           - target: { target: wasm32-unknown-unknown, description: Web }
             rust: { version: nightly, atomics: false }
           - target: { target: wasm32v1-none, description: Wasm v1 }
-            rust: { version: "1.85" }
+            rust: { version: "1.87" }
           - target: { target: wasm32v1-none, description: Wasm v1 }
             rust: { version: stable }
           - target: { target: wasm32v1-none, description: Wasm v1 }
@@ -112,7 +112,7 @@ jobs:
           - { target: wasm32-unknown-unknown, description: Web }
           - { target: wasm32v1-none, description: Wasm v1 }
         rust:
-          - { version: "1.85", description: MSRV }
+          - { version: "1.87", description: MSRV }
           - { version: stable }
           - { version: nightly }
         features:
@@ -141,7 +141,7 @@ jobs:
           - target: { target: wasm32-unknown-unknown, description: Web }
             rust: { version: nightly }
           - target: { target: wasm32v1-none, description: Wasm v1 }
-            rust: { version: "1.85" }
+            rust: { version: "1.87" }
           - target: { target: wasm32v1-none, description: Wasm v1 }
             rust: { version: stable }
           - target: { target: wasm32v1-none, description: Wasm v1 }
@@ -156,7 +156,7 @@ jobs:
           rustup default ${{ matrix.rust.version }}
       - name: Downgrade to minimal versions
         run: |
-          rustup toolchain install nightly --profile minimal
+          rustup toolchain install ${{ matrix.rust.version }}-nightly --profile minimal
           cargo +nightly update -Z minimal-versions
       - name: Build
         run: cargo build ${{ matrix.features.features }} --target ${{ matrix.target.target }}
@@ -179,7 +179,7 @@ jobs:
           - { target: wasm32-unknown-unknown, description: Web }
           - { target: wasm32v1-none, description: Wasm v1 }
         rust:
-          - { version: "1.85", description: MSRV }
+          - { version: "1.87", description: MSRV }
           - { version: stable }
           - { version: nightly }
         features:
@@ -208,7 +208,7 @@ jobs:
           - target: { target: wasm32-unknown-unknown, description: Web }
             rust: { version: nightly }
           - target: { target: wasm32v1-none, description: Wasm v1 }
-            rust: { version: "1.85" }
+            rust: { version: "1.87" }
           - target: { target: wasm32v1-none, description: Wasm v1 }
             rust: { version: stable }
           - target: { target: wasm32v1-none, description: Wasm v1 }
@@ -238,7 +238,7 @@ jobs:
           - { target: wasm32-unknown-unknown, description: Web }
           - { target: wasm32v1-none, description: Wasm v1 }
         rust:
-          - { version: "1.85", description: MSRV }
+          - { version: "1.87", description: MSRV }
           - { version: stable }
           - { version: nightly }
         # We don't check `serde` because it fails on the dependency itself already.
@@ -251,7 +251,7 @@ jobs:
           - target: { target: wasm32-unknown-unknown, description: Web }
             rust: { version: nightly }
           - target: { target: wasm32v1-none, description: Wasm v1 }
-            rust: { version: "1.85" }
+            rust: { version: "1.87" }
           - target: { target: wasm32v1-none, description: Wasm v1 }
             rust: { version: stable }
           - target: { target: wasm32v1-none, description: Wasm v1 }

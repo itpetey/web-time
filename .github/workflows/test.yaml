@@ -28,7 +28,7 @@ jobs:
         target:
           - { target: wasm32-unknown-unknown }
         rust:
-          - { version: nightly }
+          - { version: nightly, component: --component rust-src, build-std: true }
           - {
               version: nightly,
               description: with Atomics,

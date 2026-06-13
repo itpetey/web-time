@@ -28,7 +28,6 @@ jobs:
           - {
               id: "mt",
               description: with Atomics,
-              component: --component rust-src,
               cflags: -matomics -mbulk-memory,
               flags: "-Ctarget-feature=+atomics,+bulk-memory",
               build-std: true,
@@ -59,7 +58,7 @@ jobs:
           sudo apt-get install clang-19
       - name: Install Rust nightly
         run: |
-          rustup toolchain install nightly --profile minimal --target wasm32-unknown-unknown ${{ matrix.mt.component }}
+          rustup toolchain install nightly --profile minimal --target wasm32-unknown-unknown --component rust-src
           rustup default nightly
       - name: Set `build-std` components
         if: matrix.mt.build-std == true && matrix.features.no_std == false
