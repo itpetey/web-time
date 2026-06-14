@@ -18,6 +18,10 @@ inputs:
     description: Use no_std build-std components (true/false)
     required: false
     default: "false"
+  atomics:
+    description: Enable atomics support (true/false)
+    required: false
+    default: "false"
 
 runs:
   using: composite
@@ -34,7 +38,12 @@ runs:
         fi
 
         if [ "${{ inputs.build-std }}" = "true" ]; then
-          if [ "${{ inputs.no-std }}" = "true" ]; then
+          if [ "${{ inputs.atomics }}" = "true" ]; then
+            # When atomics are enabled, test dependencies (e.g. web-thread → futures → futures-executor)
+            # pull in std. Building core/alloc with atomics while std uses pre-built core (without
+            # atomics) causes duplicate lang item errors (E0152). Always build std from source too.
+            echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std" >> $GITHUB_ENV
+          elif [ "${{ inputs.no-std }}" = "true" ]; then
             echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc" >> $GITHUB_ENV
           else
             echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std" >> $GITHUB_ENV

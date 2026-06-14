@@ -184,6 +184,7 @@ jobs:
           rustflags: ${{ matrix.rust.flags || '' }}
           build-std: "true"
           no-std: ${{ matrix.features.no_std || 'false' }}
+          atomics: ${{ matrix.rust.atomics || 'false' }}
       - name: Start and set WebDriver
         if: matrix.driver.browser == true
         run: |
@@ -361,6 +362,7 @@ jobs:
           rustflags: ${{ matrix.rust.flags || '' }}
           build-std: "true"
           no-std: ${{ matrix.features.no_std || 'false' }}
+          atomics: ${{ matrix.rust.atomics || 'false' }}
       - name: Start and set WebDriver
         if: matrix.driver.browser == true
         run: |

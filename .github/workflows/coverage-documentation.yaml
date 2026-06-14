@@ -106,7 +106,7 @@ jobs:
           git sparse-checkout init --cone
           git sparse-checkout set sysroot
           git checkout HEAD
-          echo "CFLAGS_wasm32_unknown_unknown=${{ matrix.mt.cflags }} -idirafter /tmp/wasi-libc/sysroot/include" >> "$GITHUB_ENV"
+          echo "CFLAGS_wasm32_unknown_unknown=${{ matrix.mt.cflags }} -I/tmp/wasi-libc/sysroot/include" >> "$GITHUB_ENV"
       - name: Test
         env:
           WASM_BINDGEN_USE_BROWSER: 1
