@@ -76,6 +76,33 @@ jobs:
       - name: Unset serde features
         if: matrix.features.no_std == true
         run: echo "SERDE_FEATURES=" >> $GITHUB_ENV
+      - name: Get LLVM version
+        id: llvm-version
+        run: >
+          echo "version=$(rustc --version --verbose | sed -n 's/LLVM version: //p')" >>
+          "$GITHUB_OUTPUT"
+      - name: Cache compiler-rt source
+        uses: actions/cache@v4
+        id: cache-compiler-rt
+        with:
+          path: /tmp/compiler-rt
+          key: compiler-rt-${{ runner.os }}-${{ steps.llvm-version.outputs.version }}
+      - name: Fetch compiler-rt source for profiler_builtins
+        if: steps.cache-compiler-rt.outputs.cache-hit != 'true'
+        run: |
+          # profiler_builtins/build.rs needs the LLVM compiler-rt source to build
+          # the profiler runtime for wasm targets. The rust-src component no longer
+          # ships the LLVM source, so we fetch it here and point
+          # RUST_COMPILER_RT_FOR_PROFILER at it.
+          git clone --depth 1 --filter=blob:none --no-checkout \
+            https://github.com/llvm/llvm-project.git /tmp/llvm-project
+          cd /tmp/llvm-project
+          git sparse-checkout init --cone
+          git sparse-checkout set compiler-rt
+          git checkout HEAD
+          mv compiler-rt /tmp/compiler-rt
+      - name: Set RUST_COMPILER_RT_FOR_PROFILER
+        run: echo "RUST_COMPILER_RT_FOR_PROFILER=/tmp/compiler-rt" >> "$GITHUB_ENV"
       - name: Test
         env:
           WASM_BINDGEN_USE_BROWSER: 1
