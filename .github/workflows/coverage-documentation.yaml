@@ -103,6 +103,19 @@ jobs:
           mv compiler-rt /tmp/compiler-rt
       - name: Set RUST_COMPILER_RT_FOR_PROFILER
         run: echo "RUST_COMPILER_RT_FOR_PROFILER=/tmp/compiler-rt" >> "$GITHUB_ENV"
+      - name: Install wasm32 C headers for profiler_builtins
+        run: |
+          # profiler_builtins compiles C source from compiler-rt for wasm32, but
+          # wasm32-unknown-unknown has no libc headers (errno.h, etc.). Use the
+          # wasi-libc headers to provide the POSIX definitions needed to build
+          # the profiling runtime for WebAssembly targets.
+          git clone --depth 1 --filter=blob:none --no-checkout \
+            https://github.com/WebAssembly/wasi-libc.git /tmp/wasi-libc
+          cd /tmp/wasi-libc
+          git sparse-checkout init --cone
+          git sparse-checkout set sysroot
+          git checkout HEAD
+          echo "CFLAGS_wasm32_unknown_unknown=${{ matrix.mt.cflags }} -idirafter /tmp/wasi-libc/sysroot/include" >> "$GITHUB_ENV"
       - name: Test
         env:
           WASM_BINDGEN_USE_BROWSER: 1
