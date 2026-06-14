@@ -30,7 +30,6 @@ jobs:
               description: with Atomics,
               cflags: -matomics -mbulk-memory,
               flags: "-Ctarget-feature=+atomics,+bulk-memory",
-              build-std: true,
             }
         features:
           - { id: "", features: "", no_std: false }
@@ -60,15 +59,7 @@ jobs:
           toolchain: nightly
           target: wasm32-unknown-unknown
           components: rust-src
-      - name: Set `build-std` components
-        if: matrix.mt.build-std == true && matrix.features.no_std == false
-        run:
-          echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std,profiler_builtins" >> $GITHUB_ENV
-      - name: Set `build-std` `no_std` components
-        if: matrix.mt.build-std == true && matrix.features.no_std == true
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc,profiler_builtins" >> $GITHUB_ENV
-      - name: Set `build-std` profiler runtime
-        if: matrix.mt.build-std != true
+      - name: Set build-std components
         run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=profiler_builtins" >> $GITHUB_ENV
       - name: Set serde features
         if: matrix.features.no_std == false
