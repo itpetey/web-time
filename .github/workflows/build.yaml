@@ -4,21 +4,17 @@ on:
   push:
     branches: ["main", "modernise"]
   pull_request:
+  merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
-
-env:
-  CARGO_TERM_COLOR: always
 
 jobs:
   build:
     name:
       Build ${{ matrix.target.description }} ${{ matrix.rust.description }} ${{
       matrix.features.description }}
-
-    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -35,9 +31,9 @@ jobs:
               version: nightly,
               description: with Atomics,
               atomics: true,
-              component: --component rust-src,
+              components: rust-src,
               cflags: -matomics -mbulk-memory,
-              flags: "-Ctarget-feature=+atomics,+bulk-memory",
+              rustflags: "-Ctarget-feature=+atomics,+bulk-memory",
               build-std: true,
             }
         features:
@@ -72,26 +68,17 @@ jobs:
           - target: { target: wasm32v1-none, description: Wasm v1 }
             features: { no_std: false }
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust
-        run: |
-          rustup toolchain install ${{ matrix.rust.version }} --profile minimal ${{ matrix.rust.component }} --target ${{ matrix.target.target }}
-          rustup default ${{ matrix.rust.version }}
-      - name: Set `build-std` components
-        if: matrix.rust.build-std == true && matrix.features.no_std == false
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std" >> $GITHUB_ENV
-      - name: Set `build-std` `no_std` components
-        if: matrix.rust.build-std == true && matrix.features.no_std == true
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc" >> $GITHUB_ENV
-      - name: Build
-        env:
-          CFLAGS_wasm32_unknown_unknown: ${{ matrix.rust.cflags }}
-          CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS: ${{ matrix.rust.flags }}
-        run:
-          cargo build ${{ matrix.features.features }} --target ${{ matrix.target.target }}
-          $BUILD_STD_COMPONENTS
+    uses: ./.github/workflows/rust-ci.yml
+    with:
+      command: build
+      target: ${{ matrix.target.target }}
+      toolchain: ${{ matrix.rust.version }}
+      features: ${{ matrix.features.features }}
+      components: ${{ matrix.rust.components || '' }}
+      cflags: ${{ matrix.rust.cflags || '' }}
+      rustflags: ${{ matrix.rust.rustflags || '' }}
+      build-std: ${{ matrix.rust.build-std || false }}
+      no-std: ${{ matrix.features.no_std || false }}
 
   minimal-versions:
     name:
@@ -148,22 +135,21 @@ jobs:
             features: { no_std: false }
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust
-        run: |
-          rustup toolchain install ${{ matrix.rust.version }} --profile minimal --target ${{ matrix.target.target }}
-          rustup default ${{ matrix.rust.version }}
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          toolchain: ${{ matrix.rust.version }}
+          target: ${{ matrix.target.target }}
       - name: Downgrade to minimal versions
         run: |
-          rustup toolchain install ${{ matrix.rust.version }}-nightly --profile minimal
+          rustup toolchain install nightly --profile minimal
           cargo +nightly update -Z minimal-versions
       - name: Build
         run: cargo build ${{ matrix.features.features }} --target ${{ matrix.target.target }}
 
   resolver:
     name: |
-      `resolver = "1"` ${{ matrix.target.description }} ${{ matrix.rust.description }} ${{ matrix.features.description }}
+      `resolver = "3"` ${{ matrix.target.description }} ${{ matrix.rust.description }} ${{ matrix.features.description }}
 
     runs-on: ubuntu-latest
 
@@ -215,12 +201,11 @@ jobs:
             features: { no_std: false }
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust
-        run: |
-          rustup toolchain install ${{ matrix.rust.version }} --profile minimal --target ${{ matrix.target.target }}
-          rustup default ${{ matrix.rust.version }}
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          toolchain: ${{ matrix.rust.version }}
+          target: ${{ matrix.target.target }}
       - name: Build
         run: cargo build ${{ matrix.features.features }} --target ${{ matrix.target.target }}
 
@@ -258,12 +243,11 @@ jobs:
             features: { no_std: false }
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust
-        run: |
-          rustup toolchain install ${{ matrix.rust.version }} --profile minimal --target ${{ matrix.target.target }}
-          rustup default ${{ matrix.rust.version }}
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          toolchain: ${{ matrix.rust.version }}
+          target: ${{ matrix.target.target }}
       - name: Build
         env:
           RUSTFLAGS: --cfg docsrs

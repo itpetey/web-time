@@ -1,0 +1,45 @@
+name: Setup Rust
+description: Checkout and install Rust toolchain
+
+inputs:
+  toolchain:
+    description: Rust toolchain version (e.g., stable, nightly, 1.87)
+    required: false
+    default: stable
+  target:
+    description: Target triple (e.g., wasm32-unknown-unknown, x86_64-unknown-linux-gnu)
+    required: false
+    default: ""
+  components:
+    description: Comma-separated list of components (e.g., clippy,rust-src)
+    required: false
+    default: ""
+  default:
+    description: Set as default toolchain (true/false)
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Install Rust
+      shell: bash
+      run: |
+        components=""
+        if [ -n "${{ inputs.components }}" ]; then
+          IFS=',' read -ra PARTS <<< "${{ inputs.components }}"
+          for part in "${PARTS[@]}"; do
+            components="$components --component $part"
+          done
+        fi
+
+        target=""
+        if [ -n "${{ inputs.target }}" ]; then
+          target="--target ${{ inputs.target }}"
+        fi
+
+        rustup toolchain install ${{ inputs.toolchain }} --profile minimal$components --allow-downgrade $target
+
+        if [ "${{ inputs.default }}" = "true" ]; then
+          rustup default ${{ inputs.toolchain }}
+        fi

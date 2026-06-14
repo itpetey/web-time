@@ -7,6 +7,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2.0.0] - 2025-06-21
+
 ### Added
 
 - [`no_std`] support through a `std` crate feature.
@@ -97,7 +99,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Initial release.
 
-[Unreleased]: https://github.com/daxpedda/web-time/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/daxpedda/web-time/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/daxpedda/web-time/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/daxpedda/web-time/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/daxpedda/web-time/compare/v0.2.4...v1.0.0
 [0.2.4]: https://github.com/daxpedda/web-time/compare/v0.2.3...v0.2.4

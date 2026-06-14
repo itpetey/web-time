@@ -1,0 +1,42 @@
+name: Setup Wasm Build Environment
+description: Set environment variables for Wasm builds (CFLAGS, RUSTFLAGS, build-std)
+
+inputs:
+  cflags:
+    description: CFLAGS for wasm32-unknown-unknown (e.g., -matomics -mbulk-memory)
+    required: false
+    default: ""
+  rustflags:
+    description: RUSTFLAGS for wasm32-unknown-unknown (e.g., -Ctarget-feature=+atomics,+bulk-memory)
+    required: false
+    default: ""
+  build-std:
+    description: Enable build-std (true/false)
+    required: false
+    default: "false"
+  no-std:
+    description: Use no_std build-std components (true/false)
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - name: Set Wasm environment variables
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.cflags }}" ]; then
+          echo "CFLAGS_wasm32_unknown_unknown=${{ inputs.cflags }}" >> $GITHUB_ENV
+        fi
+
+        if [ -n "${{ inputs.rustflags }}" ]; then
+          echo "CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS=${{ inputs.rustflags }}" >> $GITHUB_ENV
+        fi
+
+        if [ "${{ inputs.build-std }}" = "true" ]; then
+          if [ "${{ inputs.no-std }}" = "true" ]; then
+            echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc" >> $GITHUB_ENV
+          else
+            echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std" >> $GITHUB_ENV
+          fi
+        fi

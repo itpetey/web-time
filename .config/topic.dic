@@ -1,3 +1,6 @@
+# Spellcheck dictionary for cargo-spellcheck.
+# To add a new term: append it on a new line and update the count on line 2.
+# Lines starting with '+' are regex patterns. See hunspell(5) for format details.
 27
 1G
 1M

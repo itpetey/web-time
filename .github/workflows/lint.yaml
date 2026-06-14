@@ -4,21 +4,17 @@ on:
   push:
     branches: ["main", "modernise"]
   pull_request:
+  merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
-
-env:
-  CARGO_TERM_COLOR: always
 
 jobs:
   clippy:
     name:
       Clippy ${{ matrix.target.description }} ${{ matrix.rust.description }} ${{
       matrix.features.description }}
-
-    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -33,9 +29,9 @@ jobs:
               version: nightly,
               description: with Atomics,
               atomics: true,
-              component: ",rust-src",
+              components: rust-src,
               cflags: -matomics -mbulk-memory,
-              flags: "-Ctarget-feature=+atomics,+bulk-memory",
+              rustflags: "-Ctarget-feature=+atomics,+bulk-memory",
               build-std: true,
             }
         features:
@@ -66,33 +62,22 @@ jobs:
           - rust: { atomics: true }
             features: { nightly: true }
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust
-        run: |
-          rustup toolchain install ${{ matrix.rust.version }} --profile minimal --component clippy${{ matrix.rust.component }} --allow-downgrade --target ${{ matrix.target.target }}
-          rustup default ${{ matrix.rust.version }}
-      - name: Set `build-std` components
-        if: matrix.rust.build-std == true && matrix.features.no_std == false
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std" >> $GITHUB_ENV
-      - name: Set `build-std` `no_std` components
-        if: matrix.rust.build-std == true && matrix.features.no_std == true
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc" >> $GITHUB_ENV
-      - name: Run Clippy
-        env:
-          CFLAGS_wasm32_unknown_unknown: ${{ matrix.rust.cflags }}
-          CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS: ${{ matrix.rust.flags }}
-        run:
-          cargo clippy --workspace --all-targets ${{ matrix.features.features }} --target ${{
-          matrix.target.target }} $BUILD_STD_COMPONENTS -- -D warnings
+    uses: ./.github/workflows/rust-ci.yml
+    with:
+      command: clippy
+      target: ${{ matrix.target.target }}
+      toolchain: ${{ matrix.rust.version }}
+      features: ${{ matrix.features.features }}
+      components: clippy,${{ matrix.rust.components || '' }}
+      cflags: ${{ matrix.rust.cflags || '' }}
+      rustflags: ${{ matrix.rust.rustflags || '' }}
+      build-std: ${{ matrix.rust.build-std || false }}
+      no-std: ${{ matrix.features.no_std || false }}
 
   rustdoc:
     name:
       Rustdoc ${{ matrix.target.description }} ${{ matrix.rust.description }} ${{
       matrix.features.description }} ${{ matrix.docsrs.description }}
-
-    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -107,9 +92,9 @@ jobs:
               version: nightly,
               description: with Atomics,
               atomics: true,
-              component: --component rust-src,
+              components: rust-src,
               cflags: -matomics -mbulk-memory,
-              flags: "-Ctarget-feature=+atomics,+bulk-memory",
+              rustflags: "-Ctarget-feature=+atomics,+bulk-memory",
               build-std: true,
             }
         features:
@@ -146,27 +131,19 @@ jobs:
           - rust: { atomics: true }
             features: { nightly: true }
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust
-        run: |
-          rustup toolchain install ${{ matrix.rust.version }} --profile minimal ${{ matrix.rust.component }} --target ${{ matrix.target.target }}
-          rustup default ${{ matrix.rust.version }}
-      - name: Set `build-std` components
-        if: matrix.rust.build-std == true && matrix.features.no_std == false
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=panic_abort,std" >> $GITHUB_ENV
-      - name: Set `build-std` `no_std` components
-        if: matrix.rust.build-std == true && matrix.features.no_std == true
-        run: echo "BUILD_STD_COMPONENTS=-Zbuild-std=core,alloc" >> $GITHUB_ENV
-      - name: Run Rustdoc
-        env:
-          CFLAGS_wasm32_unknown_unknown: ${{ matrix.rust.cflags }}
-          CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS: ${{ matrix.rust.flags }}
-          RUSTDOCFLAGS: -D warnings ${{ matrix.rust.flags }} ${{ matrix.docsrs.flags }}
-        run:
-          cargo doc --workspace --no-deps --document-private-items --lib --examples ${{
-          matrix.features.features }} --target ${{ matrix.target.target }} $BUILD_STD_COMPONENTS
+    uses: ./.github/workflows/rust-ci.yml
+    with:
+      command: doc
+      target: ${{ matrix.target.target }}
+      toolchain: ${{ matrix.rust.version }}
+      features: ${{ matrix.features.features }}
+      components: ${{ matrix.rust.components || '' }}
+      cflags: ${{ matrix.rust.cflags || '' }}
+      rustflags: ${{ matrix.rust.rustflags || '' }}
+      build-std: ${{ matrix.rust.build-std || false }}
+      no-std: ${{ matrix.features.no_std || false }}
+      extra-args: ${{ matrix.docsrs.flags != '' && '--cfg=docsrs' || '' }}
+      rustdocflags: -D warnings ${{ matrix.rust.rustflags || '' }} ${{ matrix.docsrs.flags }}
 
   file-permissions:
     name: File Permissions
@@ -175,7 +152,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: List all files that are executable
         run: find -type f -executable ! -path './.git/*'
       - name: Fail if any executable files were found

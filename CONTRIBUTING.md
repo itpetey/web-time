@@ -244,4 +244,10 @@ rust-profdata merge -sparse coverage-input/*/*.profraw -o coverage-input/coverag
 rust-cov show -show-instantiations=false -output-dir coverage-output -format=html -instr-profile=coverage-input/coverage.profdata ${objects[@]} -sources src
 ```
 
+## Merging
+
+This repository uses GitHub Merge Queue to ensure linear history on `main`. To merge a PR, add it to
+the merge queue via the "Merge when ready" button in the GitHub UI. All required CI checks must pass
+before the PR is merged.
+
 [`no_std`]: https://doc.rust-lang.org/1.82.0/reference/names/preludes.html#the-no_std-attribute

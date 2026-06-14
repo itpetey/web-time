@@ -1,0 +1,15 @@
+name: Setup Tool
+description: Install a tool via taiki-e/install-action
+
+inputs:
+  tool:
+    description: Tool to install (e.g., wasm-bindgen-cli, cargo-audit, taplo-cli)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install ${{ inputs.tool }}
+      uses: taiki-e/install-action@v2
+      with:
+        tool: ${{ inputs.tool }}

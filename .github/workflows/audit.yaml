@@ -4,13 +4,11 @@ on:
   push:
     branches: ["main", "modernise"]
   pull_request:
+  merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
-
-env:
-  CARGO_TERM_COLOR: always
 
 jobs:
   audit:
@@ -20,9 +18,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install `cargo-audit`
-        uses: taiki-e/install-action@v2
+        uses: ./.github/actions/setup-tool
         with:
           tool: cargo-audit
       - name: Run Audit

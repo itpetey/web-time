@@ -4,13 +4,11 @@ on:
   push:
     branches: ["main", "modernise"]
   pull_request:
+  merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
-
-env:
-  CARGO_TERM_COLOR: always
 
 jobs:
   rustfmt:
@@ -19,12 +17,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust nightly
-        run: |
-          rustup toolchain install nightly --profile minimal --component rustfmt --allow-downgrade
-          rustup default nightly
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          toolchain: nightly
+          components: rustfmt
       - name: Run Rustfmt
         run: cargo fmt --check
 
@@ -35,9 +32,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install Taplo
-        uses: taiki-e/install-action@v2
+        uses: ./.github/actions/setup-tool
         with:
           tool: taplo-cli
       - name: Run Taplo
@@ -50,7 +47,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install Prettier
         run: sudo npm i -g prettier
       - name: Run Prettier
