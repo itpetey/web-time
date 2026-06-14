@@ -31,13 +31,13 @@ required-features = ["run", "std"]
 harness = false
 name = "web_instant_failure_1"
 path = "../tests/instant_failure_1.rs"
-required-features = ["run"]
+required-features = ["run", "std"]
 
 [[test]]
 harness = false
 name = "web_instant_failure_2"
 path = "../tests/instant_failure_2.rs"
-required-features = ["run"]
+required-features = ["run", "std"]
 
 [[test]]
 harness = false
@@ -55,13 +55,13 @@ required-features = ["run", "serde"]
 harness = false
 name = "web_system_time_failure_1"
 path = "../tests/system_time_failure_1.rs"
-required-features = ["run"]
+required-features = ["run", "std"]
 
 [[test]]
 harness = false
 name = "web_system_time_failure_2"
 path = "../tests/system_time_failure_2.rs"
-required-features = ["run"]
+required-features = ["run", "std"]
 
 [[test]]
 harness = false
@@ -101,18 +101,15 @@ rand = { workspace = true, features = ["std_rng", "sys_rng"] }
 static_assertions.workspace = true
 wasm-bindgen.workspace = true
 wasm-bindgen-futures.workspace = true
-web-sys = {
-  workspace = true,
-  features = [
-    "CssStyleDeclaration",
-    "Document",
-    "Element",
-    "HtmlTableElement",
-    "HtmlTableRowElement",
-    "Performance",
-    "Window",
-  ]
-}
+web-sys = { workspace = true, features = [
+  "CssStyleDeclaration",
+  "Document",
+  "Element",
+  "HtmlTableElement",
+  "HtmlTableRowElement",
+  "Performance",
+  "Window"
+] }
 web-time = { path = "../", default-features = false }
 
 [features]
