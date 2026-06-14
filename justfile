@@ -4,10 +4,14 @@
 # Format all code with rustfmt.
 fmt:
     cargo +nightly fmt
+    tombi format
+    prettier . --write
 
 # Check formatting without modifying files.
 fmt-check:
     cargo +nightly fmt --check
+    tombi format --check
+    prettier . --check
 
 # Run Clippy on all targets with default features.
 lint:

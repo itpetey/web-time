@@ -1,131 +1,130 @@
 name: Rust CI
 
 on:
-    workflow_call:
-        inputs:
-            command:
-                description: Cargo command to run (build, clippy, doc, test)
-                required: true
-                type: string
-            target:
-                description: Target triple (e.g., wasm32-unknown-unknown, x86_64-unknown-linux-gnu)
-                required: true
-                type: string
-            toolchain:
-                description: Rust toolchain (e.g., stable, nightly, 1.87)
-                required: false
-                default: stable
-                type: string
-            features:
-                description: Feature flags (e.g., --features serde, --no-default-features)
-                required: false
-                default: ''
-                type: string
-            components:
-                description: Comma-separated Rust components (e.g., clippy,rust-src)
-                required: false
-                default: ''
-                type: string
-            cflags:
-                description: CFLAGS for wasm32-unknown-unknown
-                required: false
-                default: ''
-                type: string
-            rustflags:
-                description: RUSTFLAGS for wasm32-unknown-unknown
-                required: false
-                default: ''
-                type: string
-            build-std:
-                description: Enable build-std
-                required: false
-                default: false
-                type: boolean
-            no-std:
-                description: Use no_std build-std components
-                required: false
-                default: false
-                type: boolean
-            working-directory:
-                description: Working directory for cargo commands
-                required: false
-                default: '.'
-                type: string
-            extra-args:
-                description: Extra arguments appended to the cargo command
-                required: false
-                default: ''
-                type: string
-            rustdocflags:
-                description: Additional RUSTDOCFLAGS
-                required: false
-                default: ''
-                type: string
+  workflow_call:
+    inputs:
+      command:
+        description: Cargo command to run (build, clippy, doc, test)
+        required: true
+        type: string
+      target:
+        description: Target triple (e.g., wasm32-unknown-unknown, x86_64-unknown-linux-gnu)
+        required: true
+        type: string
+      toolchain:
+        description: Rust toolchain (e.g., stable, nightly, 1.87)
+        required: false
+        default: stable
+        type: string
+      features:
+        description: Feature flags (e.g., --features serde, --no-default-features)
+        required: false
+        default: ""
+        type: string
+      components:
+        description: Comma-separated Rust components (e.g., clippy,rust-src)
+        required: false
+        default: ""
+        type: string
+      cflags:
+        description: CFLAGS for wasm32-unknown-unknown
+        required: false
+        default: ""
+        type: string
+      rustflags:
+        description: RUSTFLAGS for wasm32-unknown-unknown
+        required: false
+        default: ""
+        type: string
+      build-std:
+        description: Enable build-std
+        required: false
+        default: false
+        type: boolean
+      no-std:
+        description: Use no_std build-std components
+        required: false
+        default: false
+        type: boolean
+      working-directory:
+        description: Working directory for cargo commands
+        required: false
+        default: "."
+        type: string
+      extra-args:
+        description: Extra arguments appended to the cargo command
+        required: false
+        default: ""
+        type: string
+      rustdocflags:
+        description: Additional RUSTDOCFLAGS
+        required: false
+        default: ""
+        type: string
 
 env:
-    CARGO_TERM_COLOR: always
+  CARGO_TERM_COLOR: always
 
 jobs:
-    run:
-        name:
-            ${{ inputs.command }} ${{ inputs.target }} ${{ inputs.toolchain }} ${{ inputs.features }}
+  run:
+    name: ${{ inputs.command }} ${{ inputs.target }} ${{ inputs.toolchain }} ${{ inputs.features }}
 
-        runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-        defaults:
-            run:
-                working-directory: ${{ inputs.working-directory }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v6
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
 
-            - name: Setup Rust
-              uses: ./.github/actions/setup-rust
-              with:
-                  toolchain: ${{ inputs.toolchain }}
-                  target: ${{ inputs.target }}
-                  components: ${{ inputs.components }}
-                  default: 'true'
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          toolchain: ${{ inputs.toolchain }}
+          target: ${{ inputs.target }}
+          components: ${{ inputs.components }}
+          default: "true"
 
-            - name: Setup Wasm environment
-              if: inputs.target == 'wasm32-unknown-unknown' || inputs.target == 'wasm32v1-none'
-              uses: ./.github/actions/setup-wasm
-              with:
-                  cflags: ${{ inputs.cflags }}
-                  rustflags: ${{ inputs.rustflags }}
-                  build-std: ${{ inputs.build-std }}
-                  no-std: ${{ inputs.no-std }}
+      - name: Setup Wasm environment
+        if: inputs.target == 'wasm32-unknown-unknown' || inputs.target == 'wasm32v1-none'
+        uses: ./.github/actions/setup-wasm
+        with:
+          cflags: ${{ inputs.cflags }}
+          rustflags: ${{ inputs.rustflags }}
+          build-std: ${{ inputs.build-std }}
+          no-std: ${{ inputs.no-std }}
 
-            - name: Set RUSTDOCFLAGS
-              if: inputs.rustdocflags != ''
-              run: echo "RUSTDOCFLAGS=${{ inputs.rustdocflags }}" >> $GITHUB_ENV
+      - name: Set RUSTDOCFLAGS
+        if: inputs.rustdocflags != ''
+        run: echo "RUSTDOCFLAGS=${{ inputs.rustdocflags }}" >> $GITHUB_ENV
 
-            - name: Run cargo ${{ inputs.command }}
-              env:
-                  CFLAGS_wasm32_unknown_unknown: ${{ inputs.cflags }}
-                  CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS: ${{ inputs.rustflags }}
-              run: |
-                  build_std=""
-                  if [ "${{ inputs.build-std }}" = "true" ]; then
-                    build_std="$BUILD_STD_COMPONENTS"
-                  fi
+      - name: Run cargo ${{ inputs.command }}
+        env:
+          CFLAGS_wasm32_unknown_unknown: ${{ inputs.cflags }}
+          CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS: ${{ inputs.rustflags }}
+        run: |
+          build_std=""
+          if [ "${{ inputs.build-std }}" = "true" ]; then
+            build_std="$BUILD_STD_COMPONENTS"
+          fi
 
-                  case "${{ inputs.command }}" in
-                    build)
-                      cargo build ${{ inputs.features }} --target ${{ inputs.target }} $build_std ${{ inputs.extra-args }}
-                      ;;
-                    clippy)
-                      cargo clippy --workspace --all-targets ${{ inputs.features }} --target ${{ inputs.target }} $build_std -- -D warnings ${{ inputs.extra-args }}
-                      ;;
-                    doc)
-                      cargo doc --workspace --no-deps --document-private-items --lib --examples ${{ inputs.features }} --target ${{ inputs.target }} $build_std ${{ inputs.extra-args }}
-                      ;;
-                    test)
-                      cargo test ${{ inputs.features }} --target ${{ inputs.target }} $build_std --workspace ${{ inputs.extra-args }}
-                      ;;
-                    *)
-                      echo "Unknown command: ${{ inputs.command }}"
-                      exit 1
-                      ;;
-                  esac
+          case "${{ inputs.command }}" in
+            build)
+              cargo build ${{ inputs.features }} --target ${{ inputs.target }} $build_std ${{ inputs.extra-args }}
+              ;;
+            clippy)
+              cargo clippy --workspace --all-targets ${{ inputs.features }} --target ${{ inputs.target }} $build_std -- -D warnings ${{ inputs.extra-args }}
+              ;;
+            doc)
+              cargo doc --workspace --no-deps --document-private-items --lib --examples ${{ inputs.features }} --target ${{ inputs.target }} $build_std ${{ inputs.extra-args }}
+              ;;
+            test)
+              cargo test ${{ inputs.features }} --target ${{ inputs.target }} $build_std --workspace ${{ inputs.extra-args }}
+              ;;
+            *)
+              echo "Unknown command: ${{ inputs.command }}"
+              exit 1
+              ;;
+          esac

@@ -3,7 +3,7 @@ description: Install a tool via taiki-e/install-action
 
 inputs:
   tool:
-    description: Tool to install (e.g., wasm-bindgen-cli, cargo-audit, taplo-cli)
+    description: Tool to install (e.g., wasm-bindgen-cli, cargo-audit, tombi)
     required: true
 
 runs:

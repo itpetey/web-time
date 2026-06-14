@@ -140,7 +140,7 @@ browsers to get stuck because of the lack of unwinding support.
 The current workaround is to split tests using `await` into separate [test targets].
 
 [`should_panic`]:
-	https://doc.rust-lang.org/1.73.0/reference/attributes/testing.html#the-should_panic-attribute
+  https://doc.rust-lang.org/1.73.0/reference/attributes/testing.html#the-should_panic-attribute
 [test harness]: https://doc.rust-lang.org/test
 [test targets]: https://doc.rust-lang.org/1.82.0/cargo/reference/cargo-targets.html#tests
 
@@ -171,7 +171,7 @@ full test coverage data via an artifact called `test-coverage`.
 
 [1]: https://rustwasm.github.io/docs/wasm-bindgen/wasm-bindgen-test/coverage.html
 [2]:
-	https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#adding-a-job-summary
+  https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#adding-a-job-summary
 
 If you want to generate test coverage locally, here is an example shell script that you can use:
 

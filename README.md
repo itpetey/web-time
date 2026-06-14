@@ -138,7 +138,7 @@ additional terms or conditions.
 [LICENSE-APACHE]: https://github.com/daxpedda/web-time/blob/v1.1.0/LICENSE-APACHE
 [worklet]: https://developer.mozilla.org/en-US/docs/Web/API/Worklet
 [`Date.now()`]:
-	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
 [`Instant`]: https://doc.rust-lang.org/std/time/struct.Instant.html
 [`Instant::now()`]: https://doc.rust-lang.org/std/time/struct.Instant.html#method.now
 [`SystemTime`]: https://doc.rust-lang.org/std/time/struct.SystemTime.html
@@ -151,5 +151,5 @@ additional terms or conditions.
 [`serde::Serialize`]: https://docs.rs/serde/1/serde/trait.Serialize.html
 [`wasm-bindgen`]: https://crates.io/crates/wasm-bindgen
 [`f64.nearest`]:
-	https://webassembly.github.io/spec/core/syntax/instructions.html#syntax-instr-numeric
+  https://webassembly.github.io/spec/core/syntax/instructions.html#syntax-instr-numeric
 [`f64.trunc`]: https://webassembly.github.io/spec/core/syntax/instructions.html#syntax-instr-numeric

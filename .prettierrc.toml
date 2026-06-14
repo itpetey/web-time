@@ -2,10 +2,10 @@ arrowParens = "avoid"
 printWidth = 100
 proseWrap = "always"
 semi = false
-singleQuote = true
-tabWidth = 4
+singleQuote = false
+tabWidth = 2
 trailingComma = "es5"
-useTabs = true
+useTabs = false
 
 # Markdown: https://github.com/prettier/prettier/issues/5019
 [[overrides]]

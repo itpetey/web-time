@@ -27,20 +27,20 @@ jobs:
       - name: Run Rustfmt
         run: cargo fmt --check
 
-  taplo:
-    name: Taplo
+  tombi:
+    name: Tombi
 
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Install Taplo
+      - name: Install Tombi
         uses: ./.github/actions/setup-tool
         with:
-          tool: taplo-cli
-      - name: Run Taplo
-        run: taplo fmt --check
+          tool: tombi
+      - name: Run Tombi
+        run: tombi format --check
 
   prettier:
     name: Prettier
