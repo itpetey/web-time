@@ -2,4 +2,4 @@
 group-blank-lines-limit = 1
 indent-style = "space"
 indent-width = 2
-line-width = 100
+line-width = 120
