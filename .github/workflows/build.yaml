@@ -135,6 +135,8 @@ jobs:
             features: { no_std: false }
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
       - name: Setup Rust
         uses: ./.github/actions/setup-rust
         with:
@@ -201,6 +203,8 @@ jobs:
             features: { no_std: false }
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
       - name: Setup Rust
         uses: ./.github/actions/setup-rust
         with:
@@ -243,6 +247,8 @@ jobs:
             features: { no_std: false }
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
       - name: Setup Rust
         uses: ./.github/actions/setup-rust
         with:
