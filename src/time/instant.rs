@@ -21,7 +21,7 @@ use super::js::TIME_ORIGIN;
 	doc = "[`std::time::Instant`]: https://doc.rust-lang.org/std/time/struct.Instant.html"
 )]
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Instant(Duration);
+pub struct Instant(pub(crate) Duration);
 
 impl Instant {
 	/// See [`std::time::Instant::now()`].
@@ -120,12 +120,6 @@ impl Instant {
 	)]
 	pub fn checked_sub(&self, duration: Duration) -> Option<Self> {
 		self.0.checked_sub(duration).map(Instant)
-	}
-}
-
-impl From<Duration> for Instant {
-	fn from(duration: Duration) -> Self {
-		Self(duration)
 	}
 }
 
